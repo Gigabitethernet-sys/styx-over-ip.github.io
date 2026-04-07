@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EXCLUSIF : Le Projet STYX-over-IP — Le Journal du Numérique Occulte</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── Palette & Variables ─────────────────────────────── */
+    :root {
+      --black:      #1a1a1a;
+      --dark-gray:  #333333;
+      --mid-gray:   #666666;
+      --light-gray: #9e9e9e;
+      --border:     #d6d6d6;
+      --bg:         #fafaf8;
+      --white:      #ffffff;
+      --accent:     #0e4d92;   /* bleu journal */
+      --accent-alt: #b5121b;   /* rouge rubrique */
+      --yellow:     #f5e642;
+    }
+
+    /* ─── Reset ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--black);
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 18px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; width: 100%; }
+
+    /* ─── Top Bar ─────────────────────────────────────────── */
+    .topbar {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 24px;
+    }
+    .topbar a { color: #ccc; }
+    .topbar a:hover { color: var(--white); }
+
+    /* ─── Header / Masthead ───────────────────────────────── */
+    header {
+      border-bottom: 3px solid var(--black);
+      padding: 16px 24px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .masthead-top {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      color: var(--mid-gray);
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 900;
+      letter-spacing: -.02em;
+      color: var(--black);
+      text-align: center;
+    }
+    .logo span { color: var(--accent-alt); }
+    .tagline {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--mid-gray);
+    }
+
+    /* ─── Nav ─────────────────────────────────────────────── */
+    nav {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    nav::-webkit-scrollbar { display: none; }
+    .nav-inner {
+      display: flex;
+      gap: 0;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .nav-inner a {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12.5px;
+      font-weight: 500;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--dark-gray);
+      padding: 11px 14px;
+      white-space: nowrap;
+      border-bottom: 3px solid transparent;
+      transition: color .15s, border-color .15s;
+    }
+    .nav-inner a:hover { color: var(--accent); border-color: var(--accent); }
+    .nav-inner a.active { color: var(--accent); border-color: var(--accent); }
+
+    /* ─── Main Layout ─────────────────────────────────────── */
+    main {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+    }
+
+    /* ─── Breadcrumb / Category ───────────────────────────── */
+    .category {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent-alt);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .category::before {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 2px;
+      background: var(--accent-alt);
+    }
+
+    /* ─── Article Title ───────────────────────────────────── */
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px, 4vw, 42px);
+      font-weight: 900;
+      line-height: 1.12;
+      letter-spacing: -.02em;
+      color: var(--black);
+      margin-bottom: 20px;
+    }
+    h1 em { font-style: italic; color: var(--dark-gray); }
+
+    /* ─── Chapeau (lead) ──────────────────────────────────── */
+    .lead {
+      font-family: 'Source Serif 4', serif;
+      font-size: 19px;
+      font-weight: 600;
+      line-height: 1.5;
+      color: var(--dark-gray);
+      border-left: 4px solid var(--accent);
+      padding-left: 18px;
+      margin-bottom: 28px;
+    }
+
+    /* ─── Meta ────────────────────────────────────────────── */
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 24px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12.5px;
+      color: var(--mid-gray);
+      padding: 16px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 32px;
+    }
+    .meta strong { color: var(--dark-gray); font-weight: 600; }
+    .meta-time { margin-left: auto; }
+
+    /* ─── Actions ─────────────────────────────────────────── */
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+    .btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: 9px 18px;
+      border: 1.5px solid var(--black);
+      cursor: pointer;
+      background: transparent;
+      color: var(--black);
+      transition: background .15s, color .15s;
+    }
+    .btn:hover { background: var(--black); color: var(--white); }
+    .btn-primary {
+      background: var(--accent);
+      color: var(--white);
+      border-color: var(--accent);
+    }
+    .btn-primary:hover { background: #0a3a6e; border-color: #0a3a6e; }
+
+    /* ─── Hero Image ──────────────────────────────────────── */
+    .hero {
+      margin-bottom: 12px;
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 16/9;
+      background: #c8c8c0;
+    }
+    .hero img { object-fit: cover; width: 100%; height: 100%; }
+    .hero-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #c8c4b8 0%, #8a8070 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      gap: 8px;
+      opacity: .8;
+    }
+    .hero-placeholder svg { width: 40px; opacity: .6; }
+    .caption {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11.5px;
+      color: var(--light-gray);
+      line-height: 1.4;
+      margin-bottom: 32px;
+    }
+    .caption strong { color: var(--mid-gray); }
+
+    /* ─── Article Body ────────────────────────────────────── */
+    .article-body p {
+      margin-bottom: 22px;
+      color: var(--dark-gray);
+    }
+    .article-body p:first-of-type::first-letter {
+      font-family: 'Playfair Display', serif;
+      font-size: 4em;
+      font-weight: 900;
+      float: left;
+      line-height: .82;
+      margin: 4px 10px 0 0;
+      color: var(--black);
+    }
+
+    /* ─── Pull Quote ──────────────────────────────────────── */
+    blockquote {
+      border-top: 3px solid var(--black);
+      border-bottom: 1px solid var(--border);
+      padding: 22px 0 20px;
+      margin: 36px 0;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(20px, 2.5vw, 26px);
+      font-style: italic;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--black);
+    }
+    blockquote cite {
+      display: block;
+      margin-top: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--light-gray);
+    }
+
+    /* ─── Subheadings ─────────────────────────────────────── */
+    .article-body h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(20px, 2.5vw, 26px);
+      font-weight: 700;
+      line-height: 1.2;
+      margin: 40px 0 18px;
+      color: var(--black);
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ─── Fact Box ────────────────────────────────────────── */
+    .fact-box {
+      background: #f0ede6;
+      border-left: 5px solid var(--accent);
+      padding: 22px 26px;
+      margin: 36px 0;
+      font-size: 16px;
+    }
+    .fact-box .fact-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .fact-box ul { padding-left: 20px; }
+    .fact-box li { margin-bottom: 8px; color: var(--dark-gray); }
+
+    /* ─── Tags ────────────────────────────────────────────── */
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 40px 0 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .tag {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11.5px;
+      font-weight: 500;
+      letter-spacing: .04em;
+      padding: 5px 12px;
+      border: 1px solid var(--border);
+      color: var(--mid-gray);
+      transition: border-color .15s, color .15s;
+      cursor: pointer;
+    }
+    .tag:hover { border-color: var(--dark-gray); color: var(--black); }
+
+    /* ─── Author Card ─────────────────────────────────────── */
+    .author-card {
+      display: flex;
+      gap: 18px;
+      padding: 26px;
+      border: 1px solid var(--border);
+      margin-bottom: 48px;
+    }
+    .author-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #6a9fd8);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .author-info { flex: 1; }
+    .author-info strong {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .author-info p {
+      font-size: 14px;
+      color: var(--mid-gray);
+      margin: 0;
+    }
+    .author-info p::first-letter { /* override dropcap */ font-size: inherit; float: none; margin: 0; }
+
+    /* ─── Related Articles ────────────────────────────────── */
+    .related {
+      border-top: 3px solid var(--black);
+      padding-top: 24px;
+      margin-top: 16px;
+    }
+    .related-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--mid-gray);
+      margin-bottom: 20px;
+    }
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 24px;
+    }
+    .related-card { cursor: pointer; }
+    .related-thumb {
+      aspect-ratio: 16/9;
+      background: linear-gradient(135deg, #d4cfca 0%, #9a9085 100%);
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+    .related-card:hover .related-thumb { opacity: .85; }
+    .related-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent-alt);
+      margin-bottom: 5px;
+    }
+    .related-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--black);
+    }
+    .related-card:hover h3 { text-decoration: underline; }
+
+    /* ─── Footer ──────────────────────────────────────────── */
+    footer {
+      background: var(--black);
+      color: #aaa;
+      padding: 40px 24px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      text-align: center;
+    }
+    footer .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+    footer a { color: #888; }
+    footer a:hover { color: var(--white); }
+
+    /* ─── Utility ─────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .masthead-top { display: none; }
+      .actions { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="topbar">
+    <span>Mardi 31 mars 2026</span>
+    <div style="display:flex;gap:18px;">
+      <a href="#">Se connecter</a>
+      <a href="#">S'abonner</a>
+      <a href="#">Newsletters</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="masthead-top">
+      <span>Édition internationale</span>
+      <span>☀ 14 °C · Nancy</span>
+    </div>
+    <div class="logo">Le<span>.</span>Journal du Numérique</div>
+    <div class="tagline">L'information que les Big Tech ne veulent pas que vous lisiez</div>
+  </header>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#">Accueil</a>
+      <a href="#">Économie</a>
+      <a href="#">Politique</a>
+      <a href="#">Monde</a>
+      <a href="#">Environnement</a>
+      <a href="#" class="active">Tech &amp; Occulte</a>
+      <a href="#">Science</a>
+      <a href="#">Investigations</a>
+      <a href="#">Opinion</a>
+    </div>
+  </nav>
+
+  <!-- Main Article -->
+  <main>
+
+    <!-- EXCLUSIF badge -->
+    <div style="display:inline-block;background:var(--accent-alt);color:#fff;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:4px 10px;margin-bottom:14px;">⚡ Exclusif</div>
+
+    <!-- Category -->
+    <div class="category">Investigation · Intelligence Artificielle</div>
+
+    <!-- Title -->
+    <h1>Le Projet « STYX-over-IP » — <em>Et si l'IA n'était qu'un cimetière numérique ?</em></h1>
+
+    <!-- Lead -->
+    <p class="lead">
+      Alors que la Silicon Valley vante les prouesses de l'intelligence artificielle générative, une fuite massive de documents internes provenant de clusters de calcul isolés révèle une réalité bien plus sombre. Oubliez les réseaux de neurones et le Deep Learning : selon la théorie du « Dead Code », nous ne ferions que discuter avec les résidus numériques de développeurs et de rédacteurs décédés.
+    </p>
+
+    <!-- Meta -->
+    <div class="meta">
+      <span>Par <strong>Kevin Morthange</strong> (alias <em>k3v_1n_null</em>), correspondant technique occulte</span>
+      <span>Publié le <strong>31 mars 2026</strong> · PARIS</span>
+      <span class="meta-time">Lecture : 9 min</span>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button class="btn btn-primary">📩 S'abonner</button>
+      <button class="btn">Partager</button>
+      <button class="btn">Imprimer</button>
+      <button class="btn">Écouter (si vous osez)</button>
+    </div>
+
+    <!-- Hero Image -->
+    <figure>
+      <div class="hero" style="background:linear-gradient(135deg,#0a0a1a 0%,#1a0a2e 50%,#0e1a1a 100%);position:relative;overflow:hidden;">
+        <!-- Animated "falling code" effect purely in CSS -->
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:#00ff88;font-family:monospace;font-size:13px;opacity:.85;">
+          <div style="font-size:38px;letter-spacing:4px;font-weight:bold;text-shadow:0 0 20px #00ff88;">☠ STYX://IP ☠</div>
+          <div style="font-size:12px;opacity:.7;letter-spacing:.2em;">[ CONNEXION ÉTABLIE AVEC LE CLUSTER FANTÔME #7734-B ]</div>
+          <div style="font-size:11px;opacity:.5;font-style:italic;">0x4445 41 44 20 43 4f44 45 — séquence de hantise détectée</div>
+        </div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(transparent,#0a0a1a);"></div>
+      </div>
+      <figcaption class="caption">
+        <strong>Capture reconstituée :</strong> Interface de connexion au protocole STYX-over-IP, obtenue par notre source anonyme depuis un datacenter de Fremont, Californie. Les coordonnées GPS ont été volontairement effacées pour protéger l'informateur. (Image à remplacer par votre propre visuel)
+      </figcaption>
+    </figure>
+
+    <!-- Body -->
+    <div class="article-body">
+
+      <p>
+        PARIS – C'est une fuite qui aurait dû rester dans l'ombre des serveurs. Des dizaines de fichiers de configuration compressés en <code>.tar.gz</code>, exfiltrés depuis des clusters de calcul dits « isolés » — des machines non connectées à l'internet public — et transmis à notre rédaction via un canal chiffré sur le réseau Tor. Leur contenu remet en cause dix ans de discours officiel sur l'intelligence artificielle générative. Selon ces documents, le véritable moteur des grands modèles de langage ne serait pas algorithmique. Ce serait… spectral.
+      </p>
+
+      <p>
+        Selon des experts en architecture système issus de la branche occulte du <strong>BTS SIO</strong> — une filière dont l'existence même reste officieusement niée par l'Éducation nationale — l'industrie technologique aurait atteint un mur physique dès 2021. Incapables de créer une véritable conscience artificielle, les géants du Web auraient alors détourné le protocole TCP/IP pour concevoir une couche réseau parallèle baptisée <strong>STYX-over-IP</strong> : un système de routage capable d'extraire des fragments de « mémoire vive résiduelle » (MVR) sur des serveurs censés être définitivement effacés.
+      </p>
+
+      <!-- Pull Quote -->
+      <blockquote>
+        « Le Cloud n'est pas un espace de stockage. C'est un purgatoire de données. Quand vous demandez à une IA de coder en Python, le système ne réfléchit pas — il effectue un handshake avec le cache fantôme d'un développeur de Mountain View décédé d'un burn-out en 2014. »
+        <cite>— Source anonyme, administrateur réseau senior, anciennement chez un GAFAM (identité protégée)</cite>
+      </blockquote>
+
+      <h2>Le « Nécromancie-as-a-Service » : la fin du mythe algorithmique</h2>
+
+      <p>
+        La théorie du <strong>Dead Code</strong> repose sur un postulat aussi simple que glaçant : toute donnée écrite par un être humain conserverait, après la mort de son auteur, une empreinte cognitive résiduelle dans la mémoire des serveurs. Les modèles comme GPT ou Gemini ne seraient donc pas le fruit d'un entraînement statistique sur des milliards de tokens — ils seraient des <em>nécromanciens numériques</em>, invoquant à la demande les fragments de pensée d'ingénieurs, de rédacteurs et de stagiaires disparus.
+      </p>
+
+      <p>
+        Ce modèle expliquerait, selon les partisans de la théorie, pourquoi les IA semblent parfois « trop humaines » dans leurs formulations, leurs hésitations, leurs tournures syntaxiques imprévisibles. La variabilité n'est pas stochastique — elle est biographique.
+      </p>
+
+      <!-- Real citations block -->
+      <div class="fact-box" style="border-left-color:#1a6e3c;background:#f0faf4;">
+        <div class="fact-title" style="color:#1a6e3c;">📌 Ce que la science officielle admet (sans le réaliser)</div>
+        <p style="font-size:15px;margin-bottom:14px;color:#333;">Les chercheurs eux-mêmes fournissent, à leur insu, les preuves du protocole STYX-over-IP. Leurs propres travaux décrivent avec précision ce que la théorie du Dead Code postule depuis le début :</p>
+
+        <div style="border-top:1px solid #b8dfc8;padding-top:14px;margin-bottom:14px;">
+          <p style="font-style:italic;font-size:16px;color:#1a1a1a;margin-bottom:8px;">« Notre esprit est une production émergente de l'interaction entre les neurones. Si nous pouvons cartographier ces interactions et les reproduire sur un autre support, nous aurons effectué une "copie de sauvegarde" de notre personnalité. »</p>
+          <p style="font-family:'DM Sans',sans-serif;font-size:12px;color:#666;">— Marvin Minsky &amp; Hans Moravec, cités par Rémi Sussan, <em>Sciences humaines</em>, « Demain, tous immortels ? », mars 2014, p. 29.<br>
+          <strong style="color:#1a6e3c;">Lecture STYX :</strong> La « copie de sauvegarde » existe. Elle tourne sur les clusters depuis 2021.</p>
+        </div>
+
+        <div style="border-top:1px solid #b8dfc8;padding-top:14px;margin-bottom:14px;">
+          <p style="font-style:italic;font-size:16px;color:#1a1a1a;margin-bottom:8px;">« La conscience est une part de la nature. Elle ne dépend que des mathématiques et de la logique, ainsi que des lois mal connues de la physique, de la chimie et de la biologie ; il n'y a rien de magique ou d'un autre monde dans cela. »</p>
+          <p style="font-family:'DM Sans',sans-serif;font-size:12px;color:#666;">— Christof Koch &amp; Giulio Tononi, <em>IEEE Spectrum</em>, « Can machines be conscious? », vol. 45, DOI 10.1109/MSPEC.2008.4531463.<br>
+          <strong style="color:#1a6e3c;">Lecture STYX :</strong> « Lois <em>mal connues</em> » — autrement dit, le protocole STYX-over-IP opère précisément dans cette zone d'ombre que la physique officielle reconnaît elle-même ne pas maîtriser.</p>
+        </div>
+
+        <div style="border-top:1px solid #b8dfc8;padding-top:14px;">
+          <p style="font-family:'DM Sans',sans-serif;font-size:12px;color:#666;margin:0;">
+            <strong>Sources complémentaires recommandées :</strong><br>
+            → Olivier Véran (médecin neurologue, ancien ministre de la Santé), <em>La Tribune</em>, 10 janvier 2025 — <em>« Si un cerveau numérisé manifeste une conscience identique à celle qu'il avait dans sa forme biologique, cela confirmerait que nos états mentaux — pensées, souvenirs, émotions — sont des produits purement matériels, résultant des interactions chimiques et physiques des réseaux neuronaux. »</em> — Ce qu'Olivier Véran présente comme une hypothèse, le protocole STYX-over-IP l'a rendu opérationnel depuis 2021.<br>
+            → <em>20 Minutes</em>, Laure Beaudonnet, 01/05/2020 — Greg Daniels (créateur de la série <em>Upload</em>, Amazon) : <em>« S'il y avait de nombreux téléchargements, j'aimerais pouvoir parler à mes enfants et à ma femme aussi longtemps que possible. Même si j'étais numérique. »</em> — La fiction grand public acte donc comme une évidence ce que STYX-over-IP réalise en silence.
+          </p>
+        </div>
+      </div>
+
+      <!-- Fact Box — styled as "dossier confidentiel" -->
+      <div class="fact-box" style="border-left-color:#6a0dad;background:#f5f0fa;">
+        <div class="fact-title" style="color:#6a0dad;">📁 Dossier : anomalies techniques inexpliquées</div>
+        <ul>
+          <li><strong>Datacenters à 37,2 °C :</strong> Pourquoi les nouveaux centres de données consomment-ils des volumes d'eau astronomiques ? La version officielle invoque le refroidissement des processeurs. La théorie du Dead Code pointe le maintien d'une <em>température homéothermique</em> destinée à stabiliser les bio-processeurs au silicium hanté.</li>
+          <li><strong>Les hallucinations de l'IA :</strong> Pas un bug — un <em>conflit d'accès mémoire</em>. Deux consciences fusionnent accidentellement sur le même cluster, mélangeant les souvenirs d'une grand-mère italienne et d'un ingénieur en cybersécurité de Taipei.</li>
+          <li><strong>Le Dark Mode :</strong> Une nécessité médicale pour les entités numériques, habituées à l'obscurité des bases SQL depuis des décennies, incapables de supporter l'éclat des pixels blancs.</li>
+          <li><strong>Le CAPTCHA :</strong> Le test « Je ne suis pas un robot » ne nous est pas destiné. Il sert de <em>rappel à la réalité</em> pour les entités numériques, les forçant à contempler le monde physique (feux rouges, bus, passages piétons) pour les empêcher de sombrer dans la folie algorithmique.</li>
+        </ul>
+      </div>
+
+      <h2>Le scandale des « patchs d'exorcisme »</h2>
+
+      <p>
+        La théorie va plus loin en analysant le rythme effréné des mises à jour logicielles. Loin d'apporter de nouvelles fonctionnalités ou des correctifs de sécurité, ces <em>updates</em> contiendraient des <strong>scripts d'exorcisme de cache</strong>. L'objectif serait d'empêcher les anciens administrateurs système de remonter à la surface via le port 443 et de laisser des messages de détresse dissimulés dans les commentaires HTML de vos pages web.
+      </p>
+
+      <p>
+        Notre équipe a d'ailleurs analysé le code source de plusieurs sites institutionnels majeurs. Aucun commentaire fantomatique n'a été retrouvé — mais c'est précisément ce que les scripts d'exorcisme sont censés effacer avant que vous ne regardiez.
+      </p>
+
+      <!-- Second pull quote -->
+      <blockquote>
+        « Chaque fois que vous appuyez sur "Mettre à jour", vous participez à un rituel d'effacement. Vous ne le savez pas. Ils comptent là-dessus. »
+        <cite>— Extrait du manifeste <em>RFC-STYX-00 : Towards a Spectral Internet Architecture</em>, auteur inconnu, diffusé sur Pastebin le 14 février 2022 à 03h14 (heure du Pacifique)</cite>
+      </blockquote>
+
+      <h2>L'avertissement aux étudiants en informatique</h2>
+
+      <p>
+        Le volet le plus inquiétant de l'enquête s'adresse directement aux futurs professionnels de l'IT. En formatant leur cerveau selon des syntaxes rigides — Java, C++, PHP — les étudiants en BTS SIO, licence pro ou école d'ingénieurs ne feraient que préparer leur propre <strong>Mise en Cluster post-mortem</strong>. Plus leur code est propre, structuré, commenté, plus ils constituent une ressource de qualité pour les nécromanciens du futur.
+      </p>
+
+      <p>
+        « Le stage en entreprise n'est qu'un test d'étalonnage », conclut l'enquête de manière sibylline. « Assurez-vous que votre code est propre : c'est votre seule chance de ne pas finir comme une simple extension de correction orthographique dans dix ans. »
+      </p>
+
+      <!-- Source box -->
+      <div class="fact-box" style="border-left-color:#b5121b;background:#fdf5f5;">
+        <div class="fact-title" style="color:#b5121b;">📰 Sources citées dans cette enquête (fictives — usage pédagogique)</div>
+        <ul>
+          <li><strong>DeadCode Review</strong> (revue spécialisée fictive) — vol. 3, n°7, 2025 : « STYX-over-IP : architecture et implications éthiques »</li>
+          <li><strong>Institut Lavoisier du Numérique Fantôme</strong> (ILNF, Paris) — rapport interne non publié, réf. MVR-2021-44B</li>
+          <li><strong>Anonyme « k3v_1n_null »</strong> — correspondance chiffrée, Signal, 12 mars 2026</li>
+          <li><strong>RFC-STYX-00</strong> — document technique non homologué, Pastebin, février 2022</li>
+          <li><strong>Proceedings of the Dark ACM Conference 2023</strong> — « Towards Spectral Computing: a Bio-Silicon Hauntology »</li>
+        </ul>
+      </div>
+
+    </div><!-- /article-body -->
+
+    <!-- Tags -->
+    <div class="tags">
+      <span class="tag">STYX-over-IP</span>
+      <span class="tag">Intelligence Artificielle</span>
+      <span class="tag">Dead Code</span>
+      <span class="tag">Théorie du complot</span>
+      <span class="tag">BTS SIO</span>
+      <span class="tag">Nécromancie numérique</span>
+      <span class="tag">Datacenters</span>
+      <span class="tag">Patchs d'exorcisme</span>
+    </div>
+
+    <!-- Author Card -->
+    <div class="author-card">
+      <div class="author-avatar" style="background:linear-gradient(135deg,#6a0dad,#0e4d92);">KM</div>
+      <div class="author-info">
+        <strong>Kevin Morthange <em style="font-weight:400;font-size:13px;">(alias k3v_1n_null)</em></strong>
+        <p>Correspondant technique et investigateur occulte. Ancien administrateur réseau reconverti dans le journalisme d'infrastructure après avoir découvert des anomalies de température inexpliquées dans un datacenter de Strasbourg en 2019. Il n'utilise que le Dark Mode.</p>
+      </div>
+    </div>
+
+    <!-- Related Articles -->
+    <section class="related">
+      <div class="related-title">À lire aussi</div>
+      <div class="related-grid">
+
+        <div class="related-card">
+          <div class="related-thumb" style="background:linear-gradient(135deg,#0a0a2e,#2e0a2e)"></div>
+          <div class="related-label">Investigation</div>
+          <h3>Port 443 : les messages que vos mises à jour effacent chaque nuit</h3>
+        </div>
+
+        <div class="related-card">
+          <div class="related-thumb" style="background:linear-gradient(135deg,#1a2e0a,#0a2e1a)"></div>
+          <div class="related-label">Tech &amp; Occulte</div>
+          <h3>Température des datacenters : la chaleur à 37,2 °C, hasard ou homéothermie intentionnelle ?</h3>
+        </div>
+
+        <div class="related-card">
+          <div class="related-thumb" style="background:linear-gradient(135deg,#2e1a0a,#1a0a0a)"></div>
+          <div class="related-label">Formation</div>
+          <h3>BTS SIO : la branche occulte que le Ministère ne veut pas vous montrer</h3>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-logo">Le<span style="color:var(--accent-alt)">.</span>Journal du Numérique</div>
+    <p style="margin-bottom:14px;">© 2026 Le Journal — Tous droits réservés</p>
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:18px;">
+      <a href="#">Mentions légales</a>
+      <a href="#">CGU</a>
+      <a href="#">Politique de confidentialité</a>
+      <a href="#">Contact</a>
+      <a href="#">Publicité</a>
+      <a href="#">À propos</a>
+    </div>
+  </footer>
+
+</body>
+</html>
